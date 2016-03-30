@@ -62,12 +62,14 @@ class WebserviceController extends AbstractController
             }
             $season = $this->findSeasonByCustomerAndDate($customerNameCanonical, $externalNetworkId, $date);
             if (empty($season)) {
-                throw new \Exception($this->get('translator')->trans(
-                    'webservice.no_season_found',
-                    array('%date%' => $date->format('d/m/Y')),
-                    'exceptions'
-                ),
-                404);
+                throw new \Exception(
+                    $this->get('translator')->trans(
+                        'webservice.no_season_found',
+                        array('%date%' => $date->format('d/m/Y')),
+                        'exceptions'
+                    ),
+                    404
+                );
             }
             $mediaUrl = $this->getMediaUrl($externalNetworkId, $externalRouteId, $externalStopPointId, $season[0]['id']);
             if (empty($mediaUrl)) {

@@ -2,7 +2,7 @@
 
 namespace CanalTP\MttBundle\Tests\Functional\Controller;
 
-use CanalTP\SamCoreBundle\Tests\Functional\Controller\BaseControllerTest AS SamBaseTestController;
+use CanalTP\SamCoreBundle\Tests\Functional\Controller\BaseControllerTest as SamBaseTestController;
 
 abstract class AbstractControllerTest extends SamBaseTestController
 {
@@ -38,8 +38,9 @@ abstract class AbstractControllerTest extends SamBaseTestController
 
             $this->mockDb();
         }
-        if ($login == true)
+        if ($login == true) {
             $this->logIn();
+        }
     }
 
     protected function getSeason()
@@ -68,7 +69,7 @@ abstract class AbstractControllerTest extends SamBaseTestController
     {
         $customer = $this->getRepository('CanalTPNmmPortalBundle:Customer')->findOneByNameCanonical('canaltp');
 
-        if ($customer == NULL) {
+        if ($customer == null) {
             throw new \RuntimeException('No customer');
         }
 

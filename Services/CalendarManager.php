@@ -340,8 +340,8 @@ class CalendarManager
         $externalCoverageId,
         $timetable,
         $stopPointInstance
-    )
-    {
+    ) {
+    
         $notesComputed = array();
         $calendarsSorted = array();
         // indicates whether to aggregate or dispatch notes
@@ -431,6 +431,4 @@ class CalendarManager
         }
         return false;
     }
-
-
 }
