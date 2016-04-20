@@ -1,0 +1,57 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'bundles/canaltpmtt/css/main.css'
+                   filter='cssrewrite' output='css/full_mtt.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}?{{ assets_version }}" />
+    {% endstylesheets %}
+ {% endblock %}
+
+{% block head_config %}
+    {{ parent() }}
+    {% include 'CanalTPMttBundle::config.js.html.twig' %}
+{% endblock %}
+
+{% block title -%}
+{{ parent() }}
+- TIMETABLE
+    {% if pageTitle %}
+    - {{ pageTitle|trans }}
+    {% endif %}
+{% endblock %}
+{% block navbar_brand %}<a href="{% if externalNetworkId %}{{ path('canal_tp_mtt_homepage', {'externalNetworkId':externalNetworkId }) }}{% else %}{{ path('canal_tp_mtt_homepage') }}{% endif %}">TIMETABLE</a>{% endblock %}
+
+{% block root_breadcrumb %}
+    <ol class="breadcrumb">
+        {% if currentNetwork %}
+            <li>
+                <a href="{{ path('canal_tp_mtt_homepage', {'externalNetworkId':currentNetwork.externalId }) }}">
+                    {{ currentNetwork.name }}
+                </a>
+            </li>
+            {% if currentSeason %}
+                <li>
+                    <a href="{{ path('canal_tp_mtt_stop_point_list_defaults', {'seasonId': currentSeason.id, 'externalNetworkId':currentNetwork.externalId }) }}">
+                        {{ currentSeason.title }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endif %}
+        {% block breadcrumb %}
+            {% if pageTitle %}
+                <li>{{ pageTitle|trans }}</li>
+            {% endif %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block body %}
+    {% block subheader %}
+    {% endblock %}
+    {% block container %}
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

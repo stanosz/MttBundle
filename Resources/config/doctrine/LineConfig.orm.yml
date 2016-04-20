@@ -1,0 +1,45 @@
+CanalTP\MttBundle\Entity\LineConfig:
+    type: entity
+    table: mtt.line_config
+    repositoryClass: CanalTP\MttBundle\Entity\LineConfigRepository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: IDENTITY
+        externalLineId:
+            type: string
+            length: 255
+            column: external_line_id
+        created:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updated:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    uniqueConstraints:
+        season_exernal_line_idx:
+            columns: [ season_id, external_line_id ]
+    oneToMany:
+        timetables:
+            targetEntity: Timetable
+            mappedBy: line_config
+            cascade:
+                - remove
+    manyToOne:
+        layoutConfig:
+            targetEntity: LayoutConfig
+            joinColumn:
+                name: layout_config_id
+                referencedColumnName: id
+        season:
+            targetEntity: Season
+            joinColumn:
+                name: season_id
+                referencedColumnName: id
+    lifecycleCallbacks: {  }

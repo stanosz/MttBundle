@@ -1,0 +1,50 @@
+CanalTP\MttBundle\Entity\Timetable:
+    type: entity
+    table: mtt.timetable
+    repositoryClass: CanalTP\MttBundle\Entity\TimetableRepository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: SEQUENCE
+            sequenceGenerator:
+                sequenceName: mtt.timetable_id_seq
+                allocationSize: 1
+                initialValue: 1
+        externalRouteId:
+            type: string
+            length: 255
+            column: external_route_id
+        created:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updated:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    uniqueConstraints:
+        timetable_external_route_idx:
+            columns: [ line_config_id, external_route_id ]
+    oneToMany:
+        blocks:
+            targetEntity: Block
+            mappedBy: timetable
+            orderBy:
+                domId: ASC
+            cascade:
+                - remove
+        stopPoints:
+            targetEntity: StopPoint
+            mappedBy: timetable
+            cascade:
+                - remove
+    manyToOne:
+        line_config:
+            targetEntity: LineConfig
+            joinColumn:
+                name: line_config_id
+                referencedColumnName: id

@@ -1,0 +1,9 @@
+vendor
+composer.lock
+*~
+docs/*
+Resources/config/config.media_manager.yml
+Resources/public/img/uploads
+Resources/public/css/uploads
+Resources/views/Layouts/uploads
+components/

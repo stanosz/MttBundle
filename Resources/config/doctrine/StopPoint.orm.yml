@@ -1,0 +1,46 @@
+CanalTP\MttBundle\Entity\StopPoint:
+    type: entity
+    table: mtt.stop_point
+    repositoryClass: CanalTP\MttBundle\Entity\StopPointRepository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: IDENTITY
+        externalId:
+            type: string
+            length: 255
+            column: external_id
+        pdfGenerationDate:
+            type: datetime
+            nullable: TRUE
+            column: pdf_generation_date
+        pdfHash:
+            type: string
+            length: 32
+            nullable: TRUE
+            column: pdf_hash
+        created:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updated:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    oneToMany:
+        blocks:
+            targetEntity: Block
+            mappedBy: stopPoint
+    manyToOne:
+        timetable:
+            targetEntity: Timetable
+            joinColumn:
+                name: timetable_id
+                referencedColumnName: id
+    uniqueConstraints:
+        stop_point_timetable_idx:
+            columns: [ timetable_id, external_id ]

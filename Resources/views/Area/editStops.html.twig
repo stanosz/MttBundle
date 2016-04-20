@@ -1,0 +1,69 @@
+{% extends "CanalTPMttBundle::container_and_menu.html.twig" %}
+
+{% block left_menu %}
+    {{ render(controller('CanalTPMttBundle:Area:navigation', { 'externalNetworkId': externalNetworkId })) }}
+{% endblock %}
+
+{% block breadcrumb %}
+    <li><a href="{{ path('canal_tp_mtt_area_list', { 'externalNetworkId' : externalNetworkId }) }}">
+        {{'menu.area_manage'|trans()}}
+    </a></li>
+  / {{ pageTitle }}{% endblock %}
+
+{% block subheader %}
+    <div class="alert alert-danger alert-dismissable danger display-none">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        Erreur lors de l'enregistrement
+    </div>
+{% endblock %}
+
+{% block main_content %}
+    <h1>{{ area.label }}</h1>
+    <div class="row">
+        <div class="col-md-offset-5 col-md-7">
+            {% if (is_granted('BUSINESS_LIST_AREA')) %}
+                <a id="manage-area" class="btn btn-primary" href="{{ path('canal_tp_mtt_area_list_pdf', {'areaId': area.id, externalNetworkId: externalNetworkId }) }}" data-toggle="modal" data-target="#base-modal">
+                    <span class="glyphicon glyphicon-file"></span> {{'area.pdf.manage'|trans({}, 'default')}}
+                </a>
+            {% endif %}
+            <a id="save-area" class="btn btn-primary" href="{{ path('canal_tp_mtt_area_edit_stops_save',{'externalNetworkId': externalNetworkId, 'areaId': area.id}) }}">
+                <span class="glyphicon glyphicon-refresh display-none"></span>
+                <span class="glyphicon glyphicon-floppy-disk"></span> {{'area.save_order'|trans({}, 'default')}}
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <div id="title-all-stop-points">
+                <h4>
+                    {{'area.stops'|trans({}, 'default')}}
+                </h4>
+                <a id="add-all-stop-points" class="btn btn-default btn-xs hide" href="#">
+                    {{'area.add_all'|trans({}, 'default')}} <span class="glyphicon glyphicon-arrow-right"></span>
+                </a>
+                <hr class="no-border black" />
+            </div>
+            <ul id="excluded-stops" class="list-group empty-list">
+                <span class="help-block">{{'area.select_route'|trans({}, 'default')}}</span>
+            </ul>
+        </div>
+        <div class="col-md-7">
+            <h4>{{'area.stops_included'|trans({}, 'default')}}</h4>
+            <hr class="no-border black" />
+            <ul id="included-stops" class="list-group sortable area-list ui-sortable {% if area.stopPoints|length == 0 %} empty-list{% endif %}">
+                {% for stopPoint in stopPointsList %}
+                    {% include 'CanalTPMttBundle:Area:stopPoint.html.twig' with {'stopPoint': stopPoint} %}
+                {% endfor %}
+                <span class="help-block{% if area.stopPoints|length != 0 %} display-none{% endif %}">{{'area.list_empty'|trans({}, 'default')}}</span>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+require(['mtt/area']);
+</script>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "CanalTPMttBundle::generic_list.html.twig" %}
+
+{% block list_title -%}{{'menu.edit_timetables'|trans}}{% endblock %}
+
+{% block list_menu %}
+    <h4>{{'global.line_label'|trans}} {{ routes.route_schedules[0].display_informations.label }} <span class="glyphicon glyphicon-arrow-right"></span> {{ routes.route_schedules[0].display_informations.direction }}</h4>
+    {% if seasons|length == 0 %}
+            {{'season.please_create_before_continue'|trans({}, 'default')}}
+            <a class="btn btn-default" href="{{ path('canal_tp_mtt_season_list', {'externalNetworkId': externalNetworkId}) }}">
+                {{'season.create'|trans({}, 'default')}}
+            </a>
+    {% elseif seasons|length != 0 %}
+        {% if is_granted('BUSINESS_CHOOSE_LAYOUT') and (lineConfig is empty or lineConfig.layoutConfig is null) %}
+            <a href="#" data-toggle="modal" data-target="#base-modal" data-remote="{{ path('canal_tp_mtt_line_choose_layout', {'externalNetworkId': externalNetworkId, 'seasonId':currentSeason.id, 'line_id': externalLineId, 'externalRouteId': externalRouteId}) }}" class="btn btn-default{% if currentSeason.locked %} disabled{% endif %}">
+                <span class="glyphicon glyphicon-cog"></span> {{'line.choose_layout'|trans({}, 'default')}}
+            </a>
+        {% elseif (lineConfig is not empty) %}
+            <div class="btn-group pull-right marg10b">
+                {% if (is_granted('BUSINESS_EDIT_LAYOUT')) %}
+                    <a class="btn btn-primary{% if currentSeason.locked %} disabled{% endif %}" href="{{ path('canal_tp_mtt_timetable_edit', {'externalNetworkId':externalNetworkId, 'externalLineId':externalLineId, 'seasonId':currentSeason.id, 'externalRouteId': externalRouteId}) }}">
+                        <span class="glyphicon glyphicon-edit"></span> {{'timetable.edit'|trans({}, 'default')}}
+                    </a>
+                {% endif %}
+                {% if (is_granted('BUSINESS_CHOOSE_LAYOUT')) %}
+                    <a class="btn btn-default{% if currentSeason.locked %} disabled{% endif %}" href="#" data-toggle="modal" data-target="#base-modal" data-remote="{{ path('canal_tp_mtt_line_choose_layout', {'externalNetworkId': externalNetworkId, 'seasonId':currentSeason.id, 'line_id': externalLineId, 'externalRouteId': externalRouteId}) }}">
+                        <span class="glyphicon glyphicon-cog"></span> {{'line.choose_layout'|trans({}, 'default')}}
+                    </a>
+                {% endif %}
+              </ul>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block table_head -%}
+    <th>{{'stop_point.header'|trans({}, 'default')}}</th>
+    {% if lineConfig is not empty %}
+        <th>{{'stop_point.pdf_generation_date'|trans({}, 'default')}}</th>
+    {% endif %}
+    <th class="text-right">{{'stop_point.action.header'|trans({}, 'default')}}</th>
+{% endblock %}
+
+{% block table_body -%}
+
+    {% for route in routes.route_schedules[0].table.rows %}
+        <tr>
+            <td>
+                {{ route.stop_point.name }}
+            </td>
+            {% if lineConfig is not empty %}
+            <td>
+                 {% if route.stop_point.pdfGenerationDate is not empty %}
+                    {{ route.stop_point.pdfGenerationDate|date('d/m/Y - g:ia') }}
+                {% endif %}
+            </td>
+            {% endif %}
+            <td class="action">
+                <div class="btn-group pull-right">
+                    {% if lineConfig is not empty and lineConfig.layoutConfig is not null %}
+                        {% if route.stop_point.pdfGenerationDate is not empty %}
+                        <button data-toggle="dropdown" type="button" class="btn btn-default dropdown-toggle{% if currentSeason.locked %} disabled{% endif %}">
+                            {{'stop_point.action.header'|trans({}, 'default')}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right force-show-nojs" role="menu">
+                            <li>
+                                <a href="{{ path('canal_tp_mtt_calendar_view', {'externalNetworkId':externalNetworkId, 'externalRouteId': externalRouteId, 'externalStopPointId' : route.stop_point.id, 'currentSeasonId':currentSeason.id}) }}">
+                                    <span class="glyphicon glyphicon-calendar"></span> {{'stop_point.view_calendars'|trans({}, 'default')}}
+                                </a>
+                            </li>
+                            <li>
+                                <a {% if currentSeason.locked %} disabled{% endif %} href="{{ path('canal_tp_mtt_timetable_download_pdf', {'externalRouteId':externalRouteId, 'externalStopPointId':route.stop_point.id, 'lineConfigId':lineConfig.id }) }}">
+                                    <span class="glyphicon glyphicon-download-alt"></span> {{'global.downloadPdf'|trans({}, 'messages')}}
+                                </a>
+                            </li>
+                        </ul>
+                        {% else %}
+                        <a class="btn btn-default" href="{{ path('canal_tp_mtt_calendar_view', {'externalNetworkId':externalNetworkId, 'externalRouteId': externalRouteId, 'externalStopPointId' : route.stop_point.id, 'currentSeasonId':currentSeason.id}) }}">
+                            <span class="glyphicon glyphicon-calendar"></span> {{'stop_point.view_calendars'|trans({}, 'default')}}
+                        </a>
+                        {% endif %}
+                        <a class="btn btn-primary" href="{{ path('canal_tp_mtt_timetable_view',  {'externalNetworkId':externalNetworkId, 'externalLineId':externalLineId, 'externalRouteId': externalRouteId, 'externalStopPointId' : route.stop_point.id , 'seasonId':currentSeason.id }) }}">
+                            <span class="glyphicon glyphicon-search"></span> {{'global.preview'|trans}}
+                        </a>
+                    {% else %}
+                        <a class="btn btn-default" href="{{ path('canal_tp_mtt_calendar_view', {'externalNetworkId':externalNetworkId, 'externalRouteId': externalRouteId, 'externalStopPointId' : route.stop_point.id, 'currentSeasonId':currentSeason.id}) }}">
+                            <span class="glyphicon glyphicon-calendar"></span> {{'stop_point.view_calendars'|trans({}, 'default')}}
+                        </a>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+
+{% endblock %}

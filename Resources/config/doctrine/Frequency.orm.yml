@@ -1,0 +1,33 @@
+CanalTP\MttBundle\Entity\Frequency:
+    type: entity
+    table: mtt.frequency
+    repositoryClass: CanalTP\MttBundle\Entity\FrequencyRepository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: IDENTITY
+        startTime:
+            type: time
+            column: start_time
+        endTime:
+            type: time
+            column: end_time
+        content:
+            type: text
+        created:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updated:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    lifecycleCallbacks: {  }
+    manyToOne:
+        block:
+            inversedBy: frequencies
+            targetEntity: Block

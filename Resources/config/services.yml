@@ -1,0 +1,195 @@
+parameters:
+    canal_tp.media_manager.class: CanalTP\MediaManagerBundle\DataCollector\MediaDataCollector
+    canal_tp.mtt.media_manager.class: CanalTP\MttBundle\Services\MediaManager
+    canal_tp_mtt.curl_proxy.class: CanalTP\MttBundle\Services\CurlProxy
+    canal_tp_mtt.user.class: CanalTP\MttBundle\Services\UserManager
+    canal_tp_mtt.navitia.class: CanalTP\MttBundle\Services\Navitia
+    canal_tp_mtt.line_manager.class: CanalTP\MttBundle\Services\LineManager
+    canal_tp_mtt.timetable_manager.class: CanalTP\MttBundle\Services\TimetableManager
+    canal_tp_mtt.stop_point_manager.class: CanalTP\MttBundle\Services\StopPointManager
+    canal_tp_mtt.calendar_manager.class: CanalTP\MttBundle\Services\CalendarManager
+    canal_tp_mtt.form.factory.class: CanalTP\MttBundle\Services\BlockTypeFactory
+    canal_tp_mtt.form.image_type_extension.class: CanalTP\MttBundle\Form\Extension\ImageTypeExtension
+    canal_tp_mtt.pdf_generator.class: CanalTP\MttBundle\Services\PdfGenerator
+    canal_tp_mtt.block_manager.class: CanalTP\MttBundle\Services\BlockManager
+    canal_tp_mtt.frequency_manager.class: CanalTP\MttBundle\Services\FrequencyManager
+    canal_tp_mtt.season.class: CanalTP\MttBundle\Services\SeasonManager
+    canal_tp_mtt.perimeter.class: CanalTP\MttBundle\Services\PerimeterManager
+    canal_tp.mtt.navitia_debug_matcher.class: CanalTP\MttBundle\Profiler\NavitiaDebugMatcher
+    canal_tp.mtt.season_copier.class: CanalTP\MttBundle\Services\SeasonCopier
+    canal_tp.mtt.validator.constraints.navitia_network_id.class: CanalTP\MttBundle\Validator\Constraints\ContainsNavitiaNetworkIdValidator
+    canal_tp.mtt.validator.constraints.greater_than_field.class: CanalTP\MttBundle\Validator\Constraints\GreaterThanFieldValidator
+    canal_tp_mtt.pdf_hashing_lib.class: CanalTP\MttBundle\Services\PdfHashingLib
+    canal_tp_mtt.pdf_manager.class: CanalTP\MttBundle\Services\PdfManager
+    #Amqp
+    canal_tp_mtt.amqp_channel.class: CanalTP\MttBundle\Services\Amqp\Channel
+    canal_tp_mtt.pdf_payload_generator.class: CanalTP\MttBundle\Services\Amqp\PdfPayloadsGenerator
+    canal_tp_mtt.amqp_pdf_gen_publisher.class: CanalTP\MttBundle\Services\Amqp\PdfGenPublisher
+    canal_tp_mtt.pdf_gen_completion_lib.class: CanalTP\MttBundle\Services\PdfGenCompletionLib
+    canal_tp_mtt.task_cancelation.class: CanalTP\MttBundle\Services\Amqp\TaskCancelation
+    canal_tp_mtt.task_manager.class: CanalTP\MttBundle\Services\TaskManager
+    # Area
+    canal_tp_mtt.area_manager.class: CanalTP\MttBundle\Services\AreaManager
+    canal_tp_mtt.area_pdf_manager.class: CanalTP\MttBundle\Services\AreaPdfManager
+    # Layout
+    canal_tp_mtt.layout.class: CanalTP\MttBundle\Services\LayoutManager
+    canal_tp_mtt.layout_config.class: CanalTP\MttBundle\Services\LayoutConfigManager
+    canal_tp_mtt.layout_model.class: CanalTP\MttBundle\Services\LayoutModelManager
+    # Perimeter
+    nmm.perimeter_manager.class: CanalTP\MttBundle\Services\PerimeterManager
+
+services:
+    #TWIG extensions
+    twig.extension.intl:
+       class: Twig_Extensions_Extension_Intl
+       tags:
+           - { name: twig.extension }
+    canal_tp_mtt.twig.schedule_extension:
+        class: CanalTP\MttBundle\Twig\ScheduleExtension
+        tags:
+            - { name: twig.extension }
+    canal_tp_mtt.twig.calendar_extension:
+        class: CanalTP\MttBundle\Twig\CalendarExtension
+        tags:
+            - { name: twig.extension }
+    canal_tp_mtt.twig.stop_point_extension:
+        class: CanalTP\MttBundle\Twig\StopPointExtension
+        tags:
+            - { name: twig.extension }
+    canal_tp_mtt.twig.task_type_extension:
+        class: CanalTP\MttBundle\Twig\TaskTypeExtension
+        arguments: ['@router', '@translator', '@doctrine.orm.entity_manager', '@canal_tp_mtt.area_pdf_manager', '@sam_navitia']
+        tags:
+            - { name: twig.extension }
+    canal_tp_mtt.twig.area_extension:
+        class: CanalTP\MttBundle\Twig\AreaExtension
+        arguments: ['@doctrine.orm.entity_manager', '@translator', '@canal_tp_mtt.area_pdf_manager']
+        tags:
+            - { name: twig.extension }
+    # Service of mediaManager
+    canal_tp.media_manager:
+        class: %canal_tp.media_manager.class%
+        arguments: [%canal_tp_media_manager.configurations.mtt%]
+    # MediaManagerMtt
+    canal_tp_mtt.media_manager:
+        class: %canal_tp.mtt.media_manager.class%
+        arguments: ['@canal_tp.media_manager']
+    # Copier
+    canal_tp_mtt.season_copier:
+        class: "%canal_tp.mtt.season_copier.class%"
+        arguments: ['@doctrine.orm.entity_manager', '@canal_tp_mtt.line_manager', '@canal_tp_mtt.timetable_manager', '@canal_tp_mtt.stop_point_manager', '@canal_tp_mtt.block_manager', '@canal_tp_mtt.frequency_manager']
+    #Profiler
+    canal_tp_mtt.matcher.navitia_debug:
+        class: "%canal_tp.mtt.navitia_debug_matcher.class%"
+        arguments: ["@security.context"]
+    # FORMS
+    form.type.layout:
+        class: CanalTP\MttBundle\Form\Type\LayoutType
+        tags:
+            - { name: form.type, alias: layout }
+    form.type.layout_config_customer:
+        class: CanalTP\MttBundle\Form\Type\LayoutConfigCustomerType
+        tags:
+            - { name: form.type, alias: layout_config_customer }
+    form.type.layouts_customer:
+        class: CanalTP\MttBundle\Form\Type\LayoutsCustomerType
+        tags:
+            - { name: form.type, alias: layouts_customer }
+    form.type.datepicker:
+        class: CanalTP\MttBundle\Form\Type\DatepickerType
+        tags:
+            - { name: form.type, alias: datepicker }
+    #Curl Proxy service
+    canal_tp_mtt.curl:
+       class: %canal_tp_mtt.curl_proxy.class%
+   #PDF
+    canal_tp_mtt.pdf_generator:
+       class: %canal_tp_mtt.pdf_generator.class%
+       arguments: ['@canal_tp_mtt.curl', '%pdf_generator_url%']
+    canal_tp_mtt.pdf_hashing_lib:
+       class: %canal_tp_mtt.pdf_hashing_lib.class%
+       arguments: ['@canal_tp_mtt.curl']
+    canal_tp_mtt.pdf_manager:
+       class: %canal_tp_mtt.pdf_manager.class%
+       arguments: ['@doctrine.orm.entity_manager', '@router', '@canal_tp_mtt.pdf_generator', '@canal_tp_mtt.media_manager', '@service_container', '@canal_tp_mtt.pdf_hashing_lib']
+    #
+    canal_tp_mtt.user:
+       class: %canal_tp_mtt.user.class%
+       arguments: ['@doctrine.orm.entity_manager', '@translator', '@service_container']
+    canal_tp_mtt.navitia:
+       class: %canal_tp_mtt.navitia.class%
+       arguments: ['@request_stack', '@navitia_component', '@sam_navitia', '@translator', '@doctrine.orm.entity_manager', @security.context, @sam_core.customer,'mtt']
+    canal_tp_mtt.line_manager:
+       class: %canal_tp_mtt.line_manager.class%
+       arguments: ['@doctrine.orm.entity_manager']
+    canal_tp_mtt.timetable_manager:
+       class: %canal_tp_mtt.timetable_manager.class%
+       arguments: ['@doctrine.orm.entity_manager', '@canal_tp_mtt.navitia', '@canal_tp_mtt.line_manager']
+    canal_tp_mtt.block_manager:
+       class: %canal_tp_mtt.block_manager.class%
+       arguments: ['@doctrine.orm.entity_manager', '@canal_tp_mtt.media_manager', '@canal_tp_mtt.calendar_manager']
+    canal_tp_mtt.stop_point_manager:
+       class: %canal_tp_mtt.stop_point_manager.class%
+       arguments: ['@doctrine.orm.entity_manager', '@canal_tp_mtt.navitia']
+    canal_tp_mtt.form.factory.block:
+       class: %canal_tp_mtt.form.factory.class%
+       arguments: ['@service_container', '@doctrine.orm.entity_manager', '@form.factory', '@canal_tp_mtt.media_manager']
+    canal_tp_mtt.calendar_manager:
+       class: %canal_tp_mtt.calendar_manager.class%
+       arguments: ['@canal_tp_mtt.navitia', '@translator']
+    canal_tp_mtt.season_manager:
+       class: %canal_tp_mtt.season.class%
+       arguments: [@doctrine.orm.entity_manager, '@canal_tp_mtt.area_pdf_manager']
+    canal_tp_mtt.frequency_manager:
+       class: %canal_tp_mtt.frequency_manager.class%
+       arguments: ['@doctrine.orm.entity_manager']
+    canal_tp_mtt.perimeter_manager:
+       class: %canal_tp_mtt.perimeter.class%
+       arguments: ['@doctrine.orm.entity_manager']
+    canal_tp.mtt.ajax_form_listener:
+        class: CanalTP\SamCoreBundle\EventListener\AjaxFormListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+    #AMQP services
+    canal_tp_mtt.amqp_channel:
+       class: %canal_tp_mtt.amqp_channel.class%
+       arguments: ['%canal_tp_mtt.amqp_server_host%', '%canal_tp_mtt.amqp_server_user%', '%canal_tp_mtt.amqp_server_pass%', '%canal_tp_mtt.amqp_server_port%', '%canal_tp_mtt.amqp_server_vhost%']
+    canal_tp_mtt.amqp_pdf_gen_publisher:
+       class: %canal_tp_mtt.amqp_pdf_gen_publisher.class%
+       arguments: ['@doctrine.orm.entity_manager', '%pdf_generator_url%', '@canal_tp_mtt.amqp_channel']
+    canal_tp_mtt.pdf_payload_generator:
+       class: %canal_tp_mtt.pdf_payload_generator.class%
+       arguments: ['@service_container', '@router', '@canal_tp_mtt.navitia', '@canal_tp_mtt.timetable_manager', '@canal_tp_mtt.stop_point_manager', '@canal_tp_mtt.line_manager', '@logger', '@translator']
+    canal_tp_mtt.pdf_gen_completion_lib:
+       class: %canal_tp_mtt.pdf_gen_completion_lib.class%
+       arguments: ['@doctrine.orm.entity_manager', '@canal_tp_mtt.media_manager', '@service_container']
+    canal_tp_mtt.task_cancelation:
+        class: %canal_tp_mtt.task_cancelation.class%
+        arguments: ['@doctrine.orm.entity_manager', '@canal_tp_mtt.amqp_channel', '%kernel.root_dir%']
+    canal_tp_mtt.task_manager:
+        class: %canal_tp_mtt.task_manager.class%
+        arguments: ['@doctrine.orm.entity_manager']
+    # Area
+    canal_tp_mtt.area_manager:
+        class: %canal_tp_mtt.area_manager.class%
+        arguments: ['@doctrine.orm.entity_manager', @nmm.perimeter_manager, '@canal_tp_mtt.area_pdf_manager']
+    canal_tp_mtt.area_pdf_manager:
+        class: %canal_tp_mtt.area_pdf_manager.class%
+        arguments: ['@doctrine.orm.entity_manager', '@request_stack', "%kernel.root_dir%/../web/uploads/", '@canal_tp_mtt.task_manager']
+    # LayoutConfig
+    canal_tp_mtt.layout_config:
+        class: %canal_tp_mtt.layout_config.class%
+        arguments: ['@doctrine.orm.entity_manager', '@security.context']
+    canal_tp_mtt.layout_model:
+        class: %canal_tp_mtt.layout_model.class%
+        arguments: ['@doctrine.orm.entity_manager', %canal_tp_mtt.layout_model.location%]
+    # Layout
+    canal_tp_mtt.layout:
+        class: %canal_tp_mtt.layout.class%
+        arguments: ['@doctrine.orm.entity_manager']
+
+    canal_tp_mtt.validator.not_overlapping_entity:
+        class: CanalTP\MttBundle\Validator\Constraints\NotOverlappingEntityValidator
+        arguments: [@canal_tp_mtt.season_manager]
+        tags:
+            - { name: validator.constraint_validator, alias: not_overlapping_entity }

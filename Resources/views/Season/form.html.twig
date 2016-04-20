@@ -1,0 +1,70 @@
+{% extends "::modal.html.twig" %}
+
+{% form_theme form 'CanalTPMttBundle:Form:fields.html.twig' %}
+
+{% block open_form %}
+    {{ form_start(form) }}
+{% endblock %}
+
+{% block modal_title %}
+    {{ title|trans({}, 'default') }}
+{% endblock %}
+
+
+{% block modal_body %}
+    {{ form_errors(form) }}
+    {{ form_row(form.title) }}
+
+    <div class="row input-range">
+        <div class="col-md-6">
+        {{ form_row(form.startDate) }}
+        </div>
+        <div class="col-md-6">
+        {{ form_row(form.endDate) }}
+        </div>
+    </div>
+
+    {% if (form.seasonToClone is not null) %}
+        {{ form_row(form.seasonToClone) }}
+        <div class="panel panel-default">
+            <div class="panel-body">{{'season.clone_explanation'|trans|raw}}</div>
+        </div>
+    {% endif %}
+
+    <script>
+        require(['bootstrap/datepicker', 'bootstrap/datepicker/{{ app.request.locale }}'], function(){
+
+            $('.input-range input').datepicker({
+                language: '{{ app.request.locale }}',
+                startView: 1,
+                autoclose: true
+            }).on(
+                'changeDate',
+                function(){
+                    if ($(this).data('fromDate') == 1) {
+                        var $endDateElem = $(this).parents('.input-range').find('input[data-to-date=1]');
+                        var date = $(this).datepicker('getDate');
+                        if (!isNaN(date.getTime())) {
+                            date.setDate(date.getDate() + 1);
+                            $endDateElem.datepicker('setStartDate', date);
+                            var endDate = $endDateElem.datepicker('getDate');
+                            if ($endDateElem.val() != '' && isNaN(endDate.getTime())) {
+                                $endDateElem.datepicker('update', date);
+                            }
+                        } else {
+                            $endDateElem.datepicker('setStartDate', new Date());
+                        }
+                    }
+                }
+            );
+            $('input[data-from-date=1]').datepicker('setStartDate', new Date()).trigger('changeDate');
+        });
+    </script>
+{% endblock %}
+
+{% block modal_actions %}
+    <button type="submit" class="btn btn-success">
+        <span class="glyphicon glyphicon-pencil"></span> {{'global.save'|trans}}
+    </button>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "::modal.html.twig" %}
+
+{% block modal_title %}
+    {{ 'area.pdf_modal_title'|trans({}, 'default') }}
+{% endblock %}
+
+{% block modal_body %}
+    {% if seasons|length %}
+    <table class="table {% block table_classes -%}table-hover{% endblock %}">
+        <thead>
+            <th>{{ 'season.title'|trans({}, 'default') }}</th>
+            <th>{{ 'global.actions'|trans }}</th>
+        </thead>
+        <tbody>
+            {% for season in seasons %}
+                <tr>
+                    <td>{{ season.title }}</td>
+                    <td>
+                        <a id="generate-area" href="{{ path('canal_tp_mtt_area_generate_pdfs', {'seasonId': season.id, 'externalNetworkId': areaExternalNetworkId, 'areaId': area.id }) }}" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-file"></span> {{'area.generate'|trans({}, 'default')}}
+                        </a>
+
+                        {% set pdfUrl = area|hasPdf(season) %}
+                        {% if (pdfUrl is not empty) %}
+                            <a class="btn btn-primary" href="{{ pdfUrl }}" target="_blank">
+                                <span class="glyphicon glyphicon-download-alt"></span> {{'area.download_pdf'|trans({}, 'default')}}
+                            </a>
+                        {% else %}
+                            <a class="btn btn-primary disabled" disabled="disabled" title="{{'area.no_pdf_at_this_time'|trans({}, 'default')}}" href="#">
+                                <span class="glyphicon glyphicon-download-alt"></span> {{'area.download_pdf'|trans({}, 'default')}}
+                            </a>
+                        {% endif %}
+
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-danger" role="alert">
+        <p>{{ 'area.no_seasons_created'|trans({}, 'default') }}</p>
+    </div>
+    <p>
+        <a href="{{ path('canal_tp_mtt_season_list', {'externalNetworkId': externalNetworkId}) }}" class="btn btn-primary">
+            {{'season.management'|trans({}, 'default')}}
+        </a>
+    </p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,11 @@
+parameters:
+    blocks:
+        text:
+            label: Text block type
+            icon: edit
+        img:
+            label: Image block type
+            icon: picture
+        calendar:
+            label: Calendar block type
+            icon: calendar

@@ -1,0 +1,32 @@
+{% extends "::modal.html.twig" %}
+
+{% form_theme form 'CanalTPMttBundle:Form:fields.html.twig' %}
+
+{% block open_form %}
+    {{ form_start(form) }}
+{% endblock %}
+
+{% block modal_title %}
+    {{'line.choose_layout'|trans({}, 'default')}}
+{% endblock %}
+
+
+{% block modal_body %}
+        {{ form_errors(form) }}
+
+        {{ form_errors(form.layout_config) }}
+        {{ form_widget(form.layout_config) }}
+{% endblock %}
+
+{% block modal_actions %}
+    <button type="submit" class="btn btn-success">
+        <span class="glyphicon glyphicon-pencil"></span> {{'global.save'|trans}}
+    </button>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        require(['mtt/form/chooseLayout']);
+    </script>
+{% endblock %}

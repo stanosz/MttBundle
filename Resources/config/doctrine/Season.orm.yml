@@ -1,0 +1,54 @@
+CanalTP\MttBundle\Entity\Season:
+    type: entity
+    table: mtt.season
+    repositoryClass: CanalTP\MttBundle\Entity\SeasonRepository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: IDENTITY
+        title:
+            type: string
+            length: 255
+        startDate:
+            type: date
+            column: start_date
+        endDate:
+            type: date
+            column: end_date
+        published:
+            type: boolean
+        locked:
+            type: boolean
+        created:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updated:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    uniqueConstraints:
+        perimeter_season_idx:
+            columns: [ title, perimeter_id ]
+    oneToMany:
+        lineConfigs:
+            targetEntity: LineConfig
+            mappedBy: season
+            cascade:
+                - remove
+        areasPdf:
+            targetEntity: AreaPdf
+            mappedBy: season
+            cascade:
+                - remove
+    manyToOne:
+        perimeter:
+            targetEntity: CanalTP\NmmPortalBundle\Entity\Perimeter
+            joinColumn:
+                name: perimeter_id
+                referencedColumnName: per_id
+    lifecycleCallbacks: {  }

@@ -1,0 +1,54 @@
+CanalTP\MttBundle\Entity\Block:
+    type: entity
+    table: mtt.block
+    repositoryClass: CanalTP\MttBundle\Entity\BlockRepository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: IDENTITY
+        typeId:
+            type: string
+            column: type_id
+        domId:
+            type: string
+            length: '128'
+            column: dom_id
+        content:
+            type: text
+            nullable: true
+        title:
+            type: string
+            length: 255
+            nullable: true
+        created:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: create
+        updated:
+            type: datetime
+            gedmo:
+                timestampable:
+                    on: update
+    lifecycleCallbacks: {  }
+    manyToOne:
+        timetable:
+            targetEntity: Timetable
+            joinColumn:
+                name: timetable_id
+                referencedColumnName: id
+        stopPoint:
+            targetEntity: StopPoint
+            joinColumn:
+                name: stop_point_id
+                referencedColumnName: id
+    oneToMany:
+        frequencies:
+            targetEntity: Frequency
+            mappedBy: block
+            orderBy:
+                startTime: 'ASC'
+            cascade:
+                - all

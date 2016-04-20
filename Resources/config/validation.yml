@@ -1,0 +1,34 @@
+CanalTP\MttBundle\Entity\Block:
+    properties:
+        title:
+            - Length:
+                max: 255
+
+CanalTP\MttBundle\Entity\Season:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: [title, perimeter]
+        - CanalTP\MttBundle\Validator\Constraints\NotOverlappingEntity:
+            parent: perimeter
+            siblings: seasons
+            startField: startDate
+            endField: endDate
+            message: error.seasons_overlapping
+    properties:
+        title:
+            - NotBlank: ~
+            - Length:
+                max: 255
+        startDate:
+            - DateTime: ~
+        endDate:
+            - DateTime: ~
+            - CanalTP\MttBundle\Validator\Constraints\GreaterThanField:
+                field: startDate
+CanalTP\MttBundle\Entity\Area:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: [label, perimeter]
+    properties:
+        label:
+            - NotBlank: ~
+            - Length:
+                max: 255

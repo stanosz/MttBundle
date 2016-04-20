@@ -1,0 +1,164 @@
+welcome: "Bienvenue sur Timetable !"
+
+stop_point:
+    label: Arrêt
+    list:
+        header: Liste des arrêts
+        back: Retour à la liste des arrêts
+    header: Arrêts
+    action:
+        header: Actions
+        validate: Valider
+        edit: Éditer la fiche horaire
+        download: Télécharger la fiche horaire
+    pdf_generation_date: Date de génération du pdf
+    view_calendars: Voir les horaires
+    block:
+        code:
+            title: Code de cet arrêt :
+            content: %code%
+            default: (Code du poteau d'arrêt)
+        pois:
+            title: Proches points de vente :
+            default: (Points de vente de l'arrêt)
+            empty: Il n'y a pas de point de vente à moins de %distance% mètres de cet arrêt
+        stop:
+            default: (Nom de l'arrêt)
+
+line:
+    choose_layout: Choisir un fond de fiche
+    layout_chosen: Le fond de fiche a bien été assigné à la ligne.
+
+timetable:
+    edit: Éditer la fiche horaire
+    titles:
+        edition: Édition
+        preview: Prévisualisation
+
+layout_config:
+    actions: Actions
+    list: Liste des fonds de fiche
+    label: Descriptif
+    preview: Prévisualisation
+    orientation: Orientation
+    create: Ajouter
+    created: Le fond de fiche a bien été ajouté
+    used_by: "Ce fond de fiche est utilisé par les lignes suivantes :"
+    confirm_delete: "Confirmez-vous la suppression ?"
+    need_reassign_layout: "Vous devrez ré-associer des fonds de fiches aux lignes ci-dessus."
+
+layout_model:
+    upload: Ajouter un modèle
+    list: Liste des modèles
+    uploaded: Modèle enregistré
+    manage: Gestion des modèles
+    label: Libellé
+    upload_date: Date de téléversement
+    actions:
+        update: Mettre à jour
+
+block:
+    get_form:
+        title: Éditer le bloc
+
+calendar:
+    view_title: Voir les horaires
+    line_code: Ligne
+    line_color: Couleur
+    period_label: Calendrier
+    days: Jours
+    empty: Vider cette grille
+    form:
+        label: Choisir le calendrier
+
+frequency:
+    form:
+        label: Éditer les fréquences de passage
+        title: Édition des fréquences de passage
+        subtitle: Cadre n°
+        add_btn: Ajouter un cadre
+
+season:
+    generation_title: Générer le pdf
+    locked: Cette saison est verrouillée. Aucune action ne peut-être réalisée.
+    please_create_before_continue: Veuillez créer une saison avant d'éditer les fiches horaires.
+    create: Créer une saison
+    edit: Éditer une saison
+    title: Nom de la saison
+    start_date: Début
+    end_date: Fin
+    list: Liste des saisons
+    management: Gestion des saisons
+    generate_pdf: Générer les pdfs
+    publication_and_generation: Souhaitez-vous également mettre à jour tous les pdfs de cette saison avant sa publication ?
+    block:
+        title: Horaires valables
+        content: du %startDate% au %endDate%
+    published: Statut de la publication
+    buttons:
+        generate_then_publish: Générer puis publier
+        publish_only: Publier uniquement
+    pdf_generation_task_has_started: La génération des %count_jobs% pdfs de la saison a bien été lancée.
+    pdf:
+        empty: Vous n'avez pas de pdf pour la saison "%seasonName%"
+
+network:
+    list: Liste des réseaux
+    add: Ajouter un réseau
+    external_coverage_id: Région
+    external_id: Réseau
+    token: Token
+
+task:
+    under_progress: Dernières tâches démarrées
+    type: Type de tâche
+    status:
+        label: Statut
+        launched: En cours
+        completed: Terminée
+        canceled: Annulée
+        failed: Échouée
+    completion: Progression
+    launchedAt: Lancée à
+    completed: Terminée
+    completedAt: Terminée à
+    area_pdf_generation: Génération de l'ensemble des pdfs du secteur "%sectorLabel%" pour la saison "%seasonTitle%"
+    season_pdf_generation: Génération de l'ensemble des pdfs de la saison "%seasonName%"
+
+area:
+    title: Liste des secteurs
+    create: Créer un secteur
+    edit: Éditer un secteur
+    list:
+        columns:
+            label: Nom du secteur
+    created: Le secteur a bien été ajouté
+    deleted: Le secteur a bien été supprimé
+    generate_pdf: Générer les pdf
+    pdf_modal_title: De quelle saison voulez-vous générer les PDF ?
+    stops: Choisir les arrêts
+    stops_included: Arrêts inclus
+    list_empty: Liste vide
+    confirm_order_saved: L'ordre de la liste a bien été enregistré
+    select_route: Sélectionnez une route dans le menu
+    add_all: Ajouter tous les arrêts
+    pdf_generation_task_has_started: La génération des %jobNumber% pdfs du secteur %sectorLabel% a bien été lancée.
+    no_pdfs: Vous n'avez pas de pdf dans le secteur "%areaName%"
+    pdf:
+        manage: Gérer le pdf
+        empty: Vous n'avez pas configuré le fond de fiche des arrêts présents dans le secteur "%areaName%" pour la saison "%seasonName%"
+    stop_point:
+        empty: Vous n'avez pas d'arrêt dans le secteur "%areaName%" pour la saison "%seasonName%"
+    save_order: Enregistrer l'ordre
+    download_pdf: Télécharger
+    generate: Générer
+    no_seasons_created: Pour créer une saison veuillez vous rendre sur la page de gestion des saisons
+
+customer:
+    assignation: Assignation des modèles aux clients
+    name: Nom du client
+    perimeters: Périmètre(s)
+    models: Modèle(s)
+    no_item: Pas de périmètre
+    actions:
+        assign_twig: Assigner

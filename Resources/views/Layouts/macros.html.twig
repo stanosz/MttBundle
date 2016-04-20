@@ -1,0 +1,208 @@
+{% macro img(id, block, class, level) %}
+    <div id="{{ id }}" data-block-level="{{ level }}" data-block-type="img" class="block {{ class }}">
+    {% if block %}
+        <img class="{{ class }}" src="{{ block.content }}" title="{{ block.title }}" alt="{{ block.title }}" />
+    {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro flash_info(id, imgPath, texte = 'Repérez la période à consulter, grâce à la couleur du jour de votre voyage indiquée sur le "Calendrier Voyageurs"') %}
+    <div id="flash_info_top"></div>
+    <img class="flash-info" src="{{ asset(imgPath) }}">
+    <div id="{{ id }}">
+        <span class="content">{{texte}}</span>
+    </div>
+    <div id="flash_info_bottom"></div>
+{% endmacro %}
+
+{% macro text(id, block, level, class) %}
+    <div id="{{ id }}" data-block-level="{{ level }}" data-block-type="text" class="{{ class }}">
+    {% if block %}
+        <div class="title">{{ block.title }}</div>
+        <div class="content">{{ block.content|nl2br }}</div>
+    {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro season_validity(id, season, class) %}
+    <div id="{{ id }}" class="{{ class }}">
+    {% if season %}
+        <div class="title">{{'season.block.title'|trans({}, 'default')}}</div>
+
+        {% set startDate = season.startDate.timestamp|localizeddate('long', 'none') %}
+        {% set endDate = season.endDate.timestamp|localizeddate('long', 'none') %}
+        <div class="content">
+            {{'season.block.content'|trans({'%startDate%':startDate, '%endDate%':endDate}, 'default')}}
+        </div>
+    {% endif %}
+    </div>
+{% endmacro %}
+
+{# params
+    string type    external code
+    string note    additional small text
+#}
+{% macro stop_point_code(id, stopPoint, class, title = null, type = 'external_code', note = null) %}
+    <div id="{{ id }}"  class="{{ class }}">
+        {% set blockTitle = title ? title : 'stop_point.block.code.title' %}
+        <div class="title">{{blockTitle|trans({}, 'default')}}</div>
+        {% if note is not null %}
+            <span class="note">{{note}}</span>
+        {% endif %}
+        <div class="content">{% spaceless %}
+            {% if stopPoint %}
+                {{'stop_point.block.code.content'|trans({'%code%':stopPoint.codes|code(type)}, 'default')}}
+            {% else %}
+                {{'stop_point.block.code.default'|trans({}, 'default')}}
+            {% endif %}
+        {% endspaceless %}</div>
+    </div>
+{% endmacro %}
+
+{% macro stop_point_pois(id, stopPoint, class, title) %}
+    <div id="{{ id }}"  class="{{ class }}">
+        {% set blockTitle = title ? title : 'stop_point.block.pois.title' %}
+        <div class="title">{{blockTitle|trans({}, 'default')}}</div>
+
+        <div class="content">{% spaceless %}
+            {% if stopPoint %}
+                {% for poi in stopPoint.getPois() %}
+                    {{ poi.name }}<br>
+                {% endfor %}
+            {% else %}
+                {{'stop_point.block.pois.default'|trans({}, 'default')}}
+            {% endif %}
+        {% endspaceless %}</div>
+    </div>
+{% endmacro %}
+
+{% macro centered_text(id, block, level, class) %}
+    <div id="{{ id }}" data-block-level="{{ level }}" data-block-type="text" class="centered-text-block {{ class }}">
+        <div class="title">{% if block %}{{ block.title }}{% endif %}</div>
+        <div class="relative">
+            <div class="content"><p>{% if block %}{{ block.content|nl2br }}{% endif %}</p></div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro notes(notes, notesType) %}
+    {# position is specific to this layout ie i==1... #}
+    {% if notes|length > 0 %}
+        <div class="timetable-notes">
+        {% if notesType == constant('CanalTP\\MttBundle\\Entity\\LayoutConfig::NOTES_TYPE_COLOR') %}
+            {% for note in notes %}
+                <div><span class="bold color-reference" style="background-color: {{ note.color }}"></span>: {{ note.value|raw }}</div>
+            {% endfor %}
+        {% else %}
+            {% for note in notes %}
+                <div><span class="bold">{{ loop.index0|footnote|raw }}</span>: {{ note.value|raw }}</div>
+            {% endfor %}
+        {% endif %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{# params string colorAltern    how to style timegrid, color direction, line or column #}
+{% macro calendar(dom_id, stopPointLevel, externalNetworkId, timetable, layout, block, calendar, notes, hours_range, linesMin, notesType, colorAltern = 'line') %}
+    {% if linesMin is empty %}
+        {% set loopMax = calendar|calendarMax %}
+    {% else %}
+        {% set loopMax = calendar|calendarMax(linesMin) %}
+    {% endif %}
+    {% if stopPointLevel == false and block %}
+        <tr class="hidden-tr-4-dropdown">
+            <td colspan="{{hours_range|length}}" class="text-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle hide" data-toggle="dropdown">
+                        {{'layout.actions'|trans({}, 'default')}} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu centered-dropdown text-left" role="menu">
+                        <li>
+                            <a data-toggle="modal" href="{{
+                                path(
+                                    'canal_tp_mtt_block_edit',
+                                    {
+                                        'externalNetworkId':externalNetworkId,
+                                        'timetableId': timetable.id,
+                                        'dom_id' : dom_id,
+                                        'blockId' : block.id,
+                                        'block_type' : 'calendar'
+                                    }
+                                )
+                            }}" data-target="#base-modal">
+                                <span class="glyphicon glyphicon-calendar"></span> {{'calendar.form.label'|trans({}, 'default')}}
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="{{
+                                path(
+                                    'canal_tp_mtt_frequency_edit',
+                                    {
+                                        'externalNetworkId':externalNetworkId,
+                                        'blockId':block.id
+                                    }
+                                )
+                            }}" data-target="#base-modal">
+                                <span class="glyphicon glyphicon-pencil"></span> {{'frequency.form.label'|trans({}, 'default')}}
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="danger" href="{{
+                                path(
+                                    'canal_tp_mtt_block_delete',
+                                    {
+                                        'externalNetworkId':externalNetworkId,
+                                        'timetableId': timetable.id,
+                                        'blockId': block.id
+                                    }
+                                )
+                            }}">
+                                <span class="glyphicon glyphicon-trash"></span> {{'calendar.empty'|trans({}, 'default')}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% endif %}
+    {% for i in 0..loopMax - 1 %}
+        <tr {% if colorAltern == 'line' %}class="{{ cycle(['even', 'odd'], i) }}"{% endif %}>
+        {% for index,hour in hours_range %}
+            <td class="timegrid-column{% if colorAltern == 'column' %}{{ cycle([' even', ' odd'], index) }}{% endif %}">{% spaceless %}
+                {% if calendar and calendar.schedules.additional_informations is null %}
+                    {% set datetime = attribute(calendar.schedules.date_times, hour) %}
+                    {% if
+                        hour|isWithinFrequency(block.frequencies, hours_range) == false
+                        and datetime
+                        and datetime|length > 0
+                    %}
+                        {% if datetime[i] %}
+                            {% if layout.dispatchesNotes %}
+                                {{ datetime[i]|schedule(notes, notesType, calendar)|raw }}
+                            {% else %}
+                                {{ datetime[i]|schedule(notes, notesType)|raw }}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endspaceless %}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+{% endmacro %}
+
+{% macro hours_thead(hours_range) %}
+    <tr>
+        {% for i in hours_range %}
+            <td class="timegrid-column hour-label">{{i}}{{ 'global.hour_label'|trans }}</td>
+        {% endfor %}
+    </tr>
+{% endmacro %}
+
+{% macro description(class) %}
+    <div data-block-type="text" class="{{ class }}">
+        <b>Agence Divia:</b> 16, place Darcy à Dijon<br>
+        <b>03 80 11 29 29 - www.divia.fr</b>
+    </div>
+{% endmacro %}

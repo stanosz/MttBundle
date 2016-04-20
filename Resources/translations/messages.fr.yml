@@ -1,0 +1,149 @@
+global:
+    actions: Actions
+    edit: Éditer
+    preview: Prévisualiser
+    validate: Valider
+    save: Enregistrer
+    close: Fermer
+    delete: Supprimer
+    cancel: Annuler
+    status: Statut
+    warning: Avertissement
+    generatePdf: Générer le PDF
+    remove: Retirer
+    add: Ajouter
+    publish: Publier
+    unpublish: Dépublier
+    line_label: Ligne
+    downloadPdf: Télécharger le PDF
+    upload: Téléverser
+    network: Réseau
+    direction: Direction
+    mode: Mode
+    hours: Heures
+    minutes: Minutes
+    hour_label: h
+    annotations: Annotations
+    stop_point_code: Code
+    exceptions:
+        add: Y compris le %date%
+        remove: Sauf le %date%
+    direction: Direction
+    remaining_chars: %nb_chars% caractères restant(s)
+    please_choose: Veuillez choisir...
+    no_items: Aucun élément à afficher
+    period_title: Dates
+    validity_period:
+        start: du
+        end: au
+        and: et
+    previous_stop_point: Arrêt précédent
+    next_stop_point: Arrêt suivant
+    confirm_season_delete: Êtes-vous sûr de vouloir supprimer cette saison ? Toutes les données liées y compris les pdf seront perdus.
+    orientation:
+        landscape: Paysage
+        portrait: Portrait
+
+error:
+    element_locked: Cet élément est verrouillé et ne peut être modifié.
+    start_end_time_incoherent: Les heures de début et de fin ne sont pas cohérentes
+    entities_overlapping: Les éléments n°%firstElement% et n°%secondElement% se chevauchent
+    navitia_network_id: "%string% n'est pas conforme au format navitia."
+    greater_than_field: Ce champ doit être supérieur au champ %field%.
+    seasons_overlapping: Cette saison n'a pu être sauvegardée car elle entre en conflit avec la saison "%saison_title%"
+
+help:
+    edit_block: Cliquez pour éditer ce bloc
+    drop_here: Déposez les éléments ici
+
+calendar:
+    start: Heure de début des calendriers
+    end: Heure de fin des calendriers
+    empty: Il n'y a pas de calendrier pour ce parcours
+    schedules:
+        date_times:
+            empty: Il n'y a pas d'horaires dans ce calendrier
+        additional_informations:
+            terminus: Terminus de ligne : pas d'horaires à cet arrêt
+            no_departure_this_day: Pas de départ prévu : pas d'horaires à cet arrêt
+    error:
+        all_calendars_selected: "Vous ne pouvez pas modifier ce calendrier car toutes les périodes sont actuellement sélectionnées."
+        content_higher_than_wrapper: Au moins un bloc dépasse la hauteur prévue
+        no_calendars_found: Pas de calendrier trouvé pour cet arrêt et cette saison
+
+menu:
+    networks: Réseaux
+    seasons: Saisons
+    seasons_manage: Gestion des saisons
+    edit_timetables: Édition des fiches horaires
+    networks_manage: Gestion des réseaux
+    models_manage: Ajouter/Mettre à jour les modèles
+    layouts_manage: Configuration de fonds de fiches
+    area_manage: Secteurs
+    assign_models_to_customers: Assigner les modèles aux clients
+
+#should be in error namespace above
+network:
+    error:
+        wrong_token: La clef navitia n'est pas correcte
+
+# Labels
+season:
+    labels:
+        title: Titre
+        start_date: Date de début
+        end_date: Date de fin
+        season_to_clone: Saison à cloner
+    clone_explanation : >
+        Si vous utilisez cette option, les éléments suivants seront reproduits depuis les fiches horaires de la saison clonée vers celles de la saison que vous êtes en train de créer :
+        <ul><li>Images que vous avez téléchargées via Timetable</li>
+            <li>Textes que vous avez saisis</li>
+            <li>Calendriers que vous avez choisis, s’ils existent encore</li></ul>
+
+frequency:
+    labels:
+        start_time: Heure de début
+        end_time: Heure de fin
+        content: Texte
+
+area:
+    labels:
+        label: Nom du secteur
+    confirm_delete: Êtes-vous sûr de vouloir supprimer ce secteur ?
+
+layout_config:
+    labels:
+        label: Nom
+        calendar_start: Heure de début des grilles horaires
+        calendar_end: Heure de fin des grilles horaires
+        preview_path: Changer l'image de prévisualisation
+        layout: Choix du modèle
+        notes_type: Type de renvois
+        notes_colors: Couleurs
+        exponents: Exposants
+        colors: Couleurs
+
+layout_model:
+    labels:
+        archive_path: Chemin de l'archive
+
+block:
+    img:
+        labels:
+            title: Titre
+            content: Image
+    text:
+        labels:
+            title: Titre
+            content: Texte
+    calendar:
+        labels:
+            title: Titre
+            content: Calendrier
+
+customer:
+    layout_list: Liste des modèles
+
+stop_point:
+    edit: Éditer
+    view: Prévisualiser

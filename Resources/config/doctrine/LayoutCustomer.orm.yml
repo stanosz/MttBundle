@@ -1,0 +1,22 @@
+CanalTP\MttBundle\Entity\LayoutCustomer:
+    type: entity
+    table: mtt.layout_customer
+    repositoryClass: CanalTP\MttBundle\Entity\LayoutCustomerRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        layout:
+            targetEntity: Layout
+            joinColumn:
+                name: layout_id
+                referencedColumnName: id
+        customer:
+            targetEntity: CanalTP\NmmPortalBundle\Entity\Customer
+            joinColumn:
+                name: customer_id
+                referencedColumnName: cus_id
+    lifecycleCallbacks: {  }

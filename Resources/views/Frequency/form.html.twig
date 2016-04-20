@@ -1,0 +1,64 @@
+{% extends "::modal.html.twig" %}
+
+{% form_theme form 'CanalTPMttBundle:Form:fields.html.twig' %}
+
+{% block open_form %}
+    {{ form_start(form) }}
+{% endblock %}
+
+{% block modal_title %}
+    {{'frequency.form.title'|trans({}, 'default')}}
+{% endblock %}
+
+
+{% block modal_body %}
+    {{ form_errors(form) }}
+    <div id="block_frequencies_wrapper" data-count="{{ form.frequencies|length }}">
+        {% for frequency in form.frequencies %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4 class="bold">
+                        {{'frequency.form.subtitle'|trans({}, 'default')}} <span class="count-label">{{ loop.index }}</span> -
+                        <button type="button" class="btn btn-danger btn-xs delete-item-collection-btn">
+                            <span class="glyphicon glyphicon-trash"></span> {{'global.delete'|trans}}
+                        </button>
+                    </h4>
+                </div>
+                <div class="col-lg-2">
+                    {{ form_row(frequency.startTime) }}
+                </div>
+                <div class="col-lg-2">
+                    {{ form_row(frequency.endTime) }}
+                </div>
+                <div class="col-lg-8">
+                    {% set remaining_chars = frequency.content.vars.attr.maxlength - frequency.content.vars.data|length %}
+                    {{ form_row(frequency.content, {'attr': {'help_text' : 'global.remaining_chars'|trans({'%nb_chars%': remaining_chars}, 'messages')}}) }}
+                </div>
+            </div>
+            <hr/>
+        {% endfor %}
+    </div>
+    <div class="text-center">
+        {% if form.frequencies|length < 4 %}
+        <button type="button" class="btn btn-success add-item-collection-btn">
+            <span class="glyphicon glyphicon-plus"></span> {{'frequency.form.add_btn'|trans({}, 'default')}}
+        </button>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block modal_close_footer %}
+    <button type="button" class="btn btn-default" data-dismiss="modal">{{'global.cancel'|trans}}</button>
+{% endblock %}
+
+{% block modal_actions %}
+    <button type="submit" class="btn btn-success">
+        <span class="glyphicon glyphicon-pencil"></span> {{'global.save'|trans}}
+    </button>
+    {{ form_end(form) }}
+    <script>
+        require(['mtt/form/validation/frequency'], function(frequencyForm){
+            frequencyForm.init();
+        });
+    </script>
+{% endblock %}
