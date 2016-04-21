@@ -16,7 +16,7 @@
 {% block title -%}
 {{ parent() }}
 - TIMETABLE
-    {% if pageTitle %}
+    {% if pageTitle|default %}
     - {{ pageTitle|trans }}
     {% endif %}
 {% endblock %}
@@ -24,7 +24,7 @@
 
 {% block root_breadcrumb %}
     <ol class="breadcrumb">
-        {% if currentNetwork %}
+        {% if currentNetwork|default %}
             <li>
                 <a href="{{ path('canal_tp_mtt_homepage', {'externalNetworkId':currentNetwork.externalId }) }}">
                     {{ currentNetwork.name }}
@@ -39,7 +39,7 @@
             {% endif %}
         {% endif %}
         {% block breadcrumb %}
-            {% if pageTitle %}
+            {% if pageTitle|default %}
                 <li>{{ pageTitle|trans }}</li>
             {% endif %}
         {% endblock %}

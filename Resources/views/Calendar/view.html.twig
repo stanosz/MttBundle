@@ -11,7 +11,7 @@
         <h3>{{ (calendars|first).schedules.stop_point.name }}</h3>
     </div>
     {% if prevNextStopPoints %}
-        {% if prevNextStopPoints.prev %}
+        {% if prevNextStopPoints.prev is defined %}
             {% set prev_url = path(
                 'canal_tp_mtt_calendar_view',
                 {
@@ -36,8 +36,8 @@
         {%
             include "CanalTPMttBundle::prevNextStopPoints.html.twig"
             with {
-                'prev_url' : prev_url ?: false,
-                'next_url' : next_url ?: false
+                'prev_url' : prev_url|default?: false,
+                'next_url' : next_url|default ?: false
             }
         %}
     {% endif %}
